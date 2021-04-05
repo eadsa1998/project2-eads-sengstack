@@ -6,7 +6,7 @@ CREATE DATABASE IF NOT EXISTS election_tweets ;
 -- entry_id (each csv file has a tweet_id but if we combine them we'll need a new unique ID)
 -- candidate (to keep track of which dataset they came from, could easily be added as 0/1 so we can get counts later)
 -- like/retweet ratio?? (not sure it would really be useful but could end up being so)
-
+-- tweet_popularity (total of like and retweet count)
 
 
 

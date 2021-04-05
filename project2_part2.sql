@@ -2,14 +2,13 @@
 DROP DATABASE IF EXISTS election_tweets;
 CREATE DATABASE IF NOT EXISTS election_tweets ;
 
+USE election_tweets;
+
 -- Other potential columns:
 -- entry_id (each csv file has a tweet_id but if we combine them we'll need a new unique ID)
 -- candidate (to keep track of which dataset they came from, could easily be added as 0/1 so we can get counts later)
 -- like/retweet ratio?? (not sure it would really be useful but could end up being so)
 -- tweet_popularity (total of like and retweet count)
-
-
-
 
 
 -- Create Megatable Statement
@@ -77,3 +76,21 @@ FIELDS TERMINATED BY ','
 	   ENCLOSED BY '"'
        ESCAPED BY '\\'
 IGNORE 1 LINES;
+
+DROP TABLE IF EXISTS election_results_megatable;
+CREATE TABLE IF NOT EXISTS election_results_megatable (
+state VARCHAR(255) DEFAULT NULL,
+county VARCHAR(255) DEFAULT NULL,
+candidate VARCHAR(8000) DEFAULT NULL,
+party VARCHAR(255) DEFAULT NULL,
+total_votes VARCHAR(255) DEFAULT NULL,
+won_race VARCHAR(255) DEFAULT NULL
+) ENGINE = INNODB;
+
+LOAD DATA INFILE 'C:\\wamp64\\tmp\\president_county_candidate.csv'
+INTO TABLE election_results_megatable
+FIELDS TERMINATED BY ','
+	   ENCLOSED BY '"'
+       ESCAPED BY '\\'
+IGNORE 1 LINES;
+

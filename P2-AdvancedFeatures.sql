@@ -1,22 +1,21 @@
+  
 # This SQL code will contain the advanced features for our database
 # We are again going to use the election_tweets database we created for our advanced features
 USE election_tweets;
 
 # Views
 # Create a view to see the number of votes in each state
-DROP VIEW IF EXISTS total_votes_by_state;
+DROP VIEW IF EXISTS votes_by_state;
 CREATE VIEW total_votes_by_state AS
 SELECT state, candidate, SUM(total_votes) AS total_votes, won_race
 FROM election_results
 GROUP BY state, candidate;
 
-
-
 # Create a view to show the percentage of votes in each state
 DROP VIEW IF EXISTS percent_votes_by_state;
 CREATE VIEW percent_votes_by_state AS
-SELECT state, candidate, ((total_votes/state_total) * 100) AS percent_votes_won
-FROM (SELECT state, candidate, SUM(total_votes) AS total_votes, state_total
+SELECT state, candidate, ((total_votes/state_total) * 100) AS percent_votes_won, won_race
+FROM (SELECT state, candidate, SUM(total_votes) AS total_votes, state_total, won_race
 	  FROM election_tweets.election_results
 		LEFT JOIN (SELECT state, SUM(total_votes) AS state_total
 				   FROM (SELECT state, candidate, SUM(total_votes) AS total_votes
@@ -43,6 +42,7 @@ DELIMITER ;
 # Call tweetsByState
 CALL tweetsByState("California");
 
+
 # Create a stored procedure to find the number of tweets above a certian popularity threshold for each candidate
 DROP PROCEDURE IF EXISTS tweet_popularity;
 DELIMITER //
@@ -58,6 +58,7 @@ DELIMITER ;
 
 # Call tweet_popularity
 CALL tweet_popularity(1000);
+
 
 # Now let's write the stored procedure where we can compare the vote percentage and tweet percentage by for a given state
 DROP PROCEDURE IF EXISTS percentageComp;
@@ -93,10 +94,20 @@ DELIMITER ;
 CALL percentageComp("California");
 
 
+# Include deleteTweet procedure for the delete a tweet UI page
+DROP PROCEDURE IF EXISTS deleteTweet;
+DELIMITER //
+CREATE PROCEDURE deleteTweet(IN desired_tweet VARCHAR (8000))
+BEGIN
+    DELETE FROM election_tweets.tweet_info
+	WHERE tweet = desired_tweet;
+END //
+    
+DELIMITER ; 
+
 
 # Triggers
 # These triggers update the total popularity variable when either the retweet count or the likes count is updated
-
 
 DROP TRIGGER IF EXISTS retweet_update;
 DELIMITER //
@@ -145,3 +156,4 @@ BEGIN
 END //
 
 DELIMITER ; 
+

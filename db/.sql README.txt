@@ -1,0 +1,15 @@
+This is the README for all the .sql files for the database project 2 for 
+Ashley Eads and Donnie Sengstack. It contains descriptions of all the files 
+and the order in which they should be run to successfully set up the database 
+side of the project.
+
+Run files in this order:
+	P2-CreateDatabase.sql - This file contains the create database and 
+create table statements for the election_tweets database and the megatables 
+for the datasets we used for the project, as well as the load in statements 
+for all the data files.
+	P2-NormalizedTables.sql - This file contains the create table
+statements for all the normalized tables in the database, as well as the load
+in statements to get the data from the megatables to the normalized tables.
+	P2-AdvancedFeatures.sql - This file contains the code for all the
+advanced features, like views, stored prodecures, and triggers.
